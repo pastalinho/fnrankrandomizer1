@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortnite Random Rank Generator</title>
+    <style>
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body {
+            font-family: 'Orbitron', 'Arial', sans-serif;
+            background-color: #0a0a14;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #0a0a14, #171733, #0a0a14);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: rgba(14, 14, 28, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.3),
+                        inset 0 0 15px rgba(0, 100, 255, 0.2);
+            border: 1px solid rgba(0, 100, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                transparent,
+                rgba(0, 100, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 10s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #00ccff, #3399ff, #ff66cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #00ccff, #3399ff, #ff66cc);
+        }
+        
+        .rank-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            min-height: 200px;
+            background: rgba(10, 10, 20, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(5px);
+        }
+        
+        .rank-image {
+            width: 170px;
+            height: 170px;
+            margin-right: 30px;
+            border-radius: 15px;
+            object-fit: contain;
+            box-shadow: 0 0 20px rgba(0, 100, 255, 0.5);
+            border: 2px solid rgba(0, 200, 255, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .rank-text {
+            font-size: 2.8em;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .bronze { 
+            color: #cd7f32; 
+            text-shadow: 0 0 10px rgba(205, 127, 50, 0.7);
+        }
+        .silver { 
+            color: #c0c0c0; 
+            text-shadow: 0 0 10px rgba(192, 192, 192, 0.7);
+        }
+        .gold { 
+            color: #ffd700; 
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+        .platinum { 
+            color: #00bfff; 
+            text-shadow: 0 0 10px rgba(0, 191, 255, 0.7);
+        }
+        .diamond { 
+            color: #b9f2ff; 
+            text-shadow: 0 0 10px rgba(185, 242, 255, 0.7);
+        }
+        .elite { 
+            color: #ff4500; 
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.7);
+        }
+        .champion { 
+            color: #9932cc; 
+            text-shadow: 0 0 10px rgba(153, 50, 204, 0.7);
+        }
+        .unreal { 
+            color: #ff1493; 
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.7);
+        }
+        .unranked { 
+            color: #999999; 
+            text-shadow: 0 0 10px rgba(153, 153, 153, 0.7);
+        }
+        
+        button {
+            background: linear-gradient(45deg, #3399ff, #00ffcc);
+            color: #0a0a14;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+            font-family: 'Orbitron', 'Arial', sans-serif;
+        }
+        
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: all 0.5s ease;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.7);
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .shine {
+            animation: rankShine 2s ease-in-out;
+        }
+        
+        @keyframes rankShine {
+            0% { filter: brightness(1) blur(0px); }
+            25% { filter: brightness(1.7) blur(2px); }
+            50% { filter: brightness(1.5) blur(0px); }
+            75% { filter: brightness(1.7) blur(1px); }
+            100% { filter: brightness(1) blur(0px); }
+        }
+        
+        .hexagon {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: rgba(0, 200, 255, 0.5);
+            border-radius: 50%;
+            animation: particleFloat 20s infinite linear;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-500px) translateX(100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="particles" id="particles"></div>
+        <h1>FORTNITE RANK GENERATOR</h1>
+        
+        <div class="rank-container">
+            <img id="rankImage" class="rank-image" src="https://static.wikia.nocookie.net/fortnite/images/0/0d/Unknown_Rank_-_Icon_-_Fortnite.png/revision/latest?cb=20230531202915/150/150" alt="Rank">
+            <div id="rankText" class="rank-text">Press the button to get your rank!</div>
+        </div>
+        
+        <button id="generateButton">GENERATE RANK</button>
+    </div>
+
+    <script>
+        const ranks = [
+            { name: "Unranked", class: "unranked", img: "https://static.wikia.nocookie.net/fortnite/images/0/0d/Unknown_Rank_-_Icon_-_Fortnite.png/revision/latest?cb=20230531202915/150/150" },
+            { name: "Bronze I", class: "bronze", img: "https://static.wikia.nocookie.net/fortnite/images/4/44/Bronze_I_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201220/150/150" },
+            { name: "Bronze II", class: "bronze", img: "https://static.wikia.nocookie.net/fortnite/images/9/92/Bronze_II_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201221/150/150" },
+            { name: "Bronze III", class: "bronze", img: "https://static.wikia.nocookie.net/fortnite/images/7/74/Bronze_III_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201222/150/150" },
+            { name: "Silver I", class: "silver", img: "https://static.wikia.nocookie.net/fortnite/images/c/c3/Silver_I_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201235/150/150" },
+            { name: "Silver II", class: "silver", img: "https://static.wikia.nocookie.net/fortnite/images/1/1d/Silver_II_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201236/150/150" },
+            { name: "Silver III", class: "silver", img: "https://static.wikia.nocookie.net/fortnite/images/0/0a/Silver_III_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201237/150/150" },
+            { name: "Gold I", class: "gold", img: "https://static.wikia.nocookie.net/fortnite/images/3/37/Gold_I_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201229/150/150" },
+            { name: "Gold II", class: "gold", img: "https://static.wikia.nocookie.net/fortnite/images/f/fb/Gold_II_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201230/150/150" },
+            { name: "Gold III", class: "gold", img: "https://static.wikia.nocookie.net/fortnite/images/c/cf/Gold_III_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201231/150/150" },
+            { name: "Platinum I", class: "platinum", img: "https://static.wikia.nocookie.net/fortnite/images/2/2a/Platinum_I_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201232/150/150" },
+            { name: "Platinum II", class: "platinum", img: "https://static.wikia.nocookie.net/fortnite/images/3/3e/Platinum_II_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201233/150/150" },
+            { name: "Platinum III", class: "platinum", img: "https://static.wikia.nocookie.net/fortnite/images/3/30/Platinum_III_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201234/150/150" },
+            { name: "Diamond I", class: "diamond", img: "https://static.wikia.nocookie.net/fortnite/images/9/98/Diamond_I_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201224/150/150" },
+            { name: "Diamond II", class: "diamond", img: "https://static.wikia.nocookie.net/fortnite/images/d/db/Diamond_II_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201226/150/150" },
+            { name: "Diamond III", class: "diamond", img: "https://static.wikia.nocookie.net/fortnite/images/e/e1/Diamond_III_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201227/150/150" },
+            { name: "Elite", class: "elite", img: "https://static.wikia.nocookie.net/fortnite/images/2/2e/Elite_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201228/150/150" },
+            { name: "Champion", class: "champion", img: "https://static.wikia.nocookie.net/fortnite/images/2/2a/Champion_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201223/150/150" },
+            { name: "Unreal", class: "unreal", img: "https://static.wikia.nocookie.net/fortnite/images/6/6c/Unreal_-_Icon_-_Fortnite.png/revision/latest?cb=20230531201239/150/150" }
+        ];
+
+        const generateButton = document.getElementById('generateButton');
+        const rankText = document.getElementById('rankText');
+        const rankImage = document.getElementById('rankImage');
+        const particlesContainer = document.getElementById('particles');
+        
+        // Create floating particles
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.width = (Math.random() * 4 + 2) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            particle.style.animationDelay = (Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+        
+        generateButton.addEventListener('click', function() {
+            // Disable button temporarily to prevent spam clicks
+            generateButton.disabled = true;
+            
+            // Add spinning animation or loading effect
+            rankText.innerHTML = "Calculating<span id='dots'>.</span>";
+            
+            let dotCount = 1;
+            const dotsInterval = setInterval(() => {
+                const dots = document.getElementById('dots');
+                if (dots) {
+                    dots.textContent = '.'.repeat(dotCount);
+                    dotCount = (dotCount % 3) + 1;
+                }
+            }, 300);
+            
+            setTimeout(function() {
+                clearInterval(dotsInterval);
+                
+                // Pick a random rank
+                const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+                
+                // Update the display
+                rankText.textContent = randomRank.name;
+                rankImage.src = randomRank.img;
+                rankImage.alt = randomRank.name;
+                
+                // Reset all classes
+                ranks.forEach(rank => {
+                    rankText.classList.remove(rank.class);
+                });
+                
+                // Add the appropriate class for styling
+                rankText.classList.add(randomRank.class);
+                
+                // Add shine effect
+                rankImage.classList.add('shine');
+                rankText.classList.add('shine');
+                
+                // Create explosion particles for dramatic effect
+                createExplosionEffect();
+                
+                // Remove shine effect after animation completes
+                setTimeout(function() {
+                    rankImage.classList.remove('shine');
+                    rankText.classList.remove('shine');
+                }, 2000);
+                
+                // Re-enable button
+                generateButton.disabled = false;
+            }, 1500); // Longer delay for dramatic effect
+        });
+        
+        function createExplosionEffect() {
+            const container = document.querySelector('.rank-container');
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = (Math.random() * 6 + 4) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = getRandomColor();
+                particle.style.borderRadius = '50%';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 100 + 50;
+                const duration = Math.random() * 1 + 0.5;
+                
+                particle.style.transform = `translate(-50%, -50%)`;
+                
+                container.appendChild(particle);
+                
+                // Animate the particle
+                particle.animate([
+                    { transform: 'translate(-50%, -50%)', opacity: 1 },
+                    { 
+                        transform: `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0,0,0.2,1)'
+                }).onfinish = () => {
+                    particle.remove();
+                };
+            }
+        }
+        
+        function getRandomColor() {
+            const colors = [
+                'rgba(0, 191, 255, 0.8)',   // platinum
+                'rgba(255, 215, 0, 0.8)',   // gold
+                'rgba(185, 242, 255, 0.8)', // diamond
+                'rgba(255, 69, 0, 0.8)',    // elite
+                'rgba(153, 50, 204, 0.8)',  // champion
+                'rgba(255, 20, 147, 0.8)'   // unreal
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    </script>
+</head>
+</body>
+</html>
